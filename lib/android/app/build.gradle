@@ -125,6 +125,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:$kotlinStdlib:$kotlinVersion"
     implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
     implementation 'com.facebook.react:react-native:+'
+    //why?
+    //implementation project(path: ':react-native-ble-manager')
 
     // tests
     testImplementation 'junit:junit:4.12'
