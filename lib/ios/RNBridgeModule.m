@@ -76,11 +76,11 @@ RCT_EXPORT_METHOD(setBadgeCount:(int)count) {
     [_commandsHandler setBadgeCount:count];
 }
 
-RCT_EXPORT_METHOD(postLocalNotification:(NSDictionary *)notification withId:(nonnull NSNumber *)notificationId) {
+RCT_EXPORT_METHOD(postLocalNotification:(NSDictionary *)notification withId:(nonnull NSString *)notificationId) {
     [_commandsHandler postLocalNotification:notification withId:notificationId];
 }
 
-RCT_EXPORT_METHOD(cancelLocalNotification:(nonnull NSNumber *)notificationId) {
+RCT_EXPORT_METHOD(cancelLocalNotification:(nonnull NSString *)notificationId) {
     [_commandsHandler cancelLocalNotification:notificationId];
 }
 

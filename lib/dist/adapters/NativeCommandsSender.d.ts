@@ -6,7 +6,7 @@ import { NotificationChannel } from '../interfaces/NotificationChannel';
 export declare class NativeCommandsSender {
     private readonly nativeCommandsModule;
     constructor();
-    postLocalNotification(notification: Notification, id: number): void;
+    postLocalNotification(notification: Notification, id: string): void;
     getInitialNotification(): Promise<Object>;
     requestPermissions(): void;
     abandonPermissions(): void;

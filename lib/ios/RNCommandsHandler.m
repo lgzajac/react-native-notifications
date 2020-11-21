@@ -58,11 +58,11 @@
     });
 }
 
-- (void)postLocalNotification:(NSDictionary *)notification withId:(NSNumber *)notificationId {
+- (void)postLocalNotification:(NSDictionary *)notification withId:(NSString *)notificationId {
     [_notificationCenter postLocalNotification:notification withId:notificationId];
 }
 
-- (void)cancelLocalNotification:(NSNumber *)notificationId {
+- (void)cancelLocalNotification:(NSString *)notificationId {
     [_notificationCenter cancelLocalNotification:notificationId];
 }
 

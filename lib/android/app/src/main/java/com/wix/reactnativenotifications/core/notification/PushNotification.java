@@ -75,7 +75,7 @@ public class PushNotification implements IPushNotification {
     }
 
     @Override
-    public int onPostRequest(Integer notificationId, String channelID) {
+    public int onPostRequest(string notificationId, String channelID) {
         return postNotification(notificationId, channelID);
     }
 
@@ -84,7 +84,7 @@ public class PushNotification implements IPushNotification {
         return mNotificationProps.copy();
     }
 
-    protected int postNotification(Integer notificationId, String channelID) {
+    protected int postNotification(string notificationId, String channelID) {
         final PendingIntent pendingIntent = getCTAPendingIntent();
         final Notification notification = buildNotification(pendingIntent, channelID);
         return postNotification(notification, notificationId);
@@ -194,7 +194,7 @@ public class PushNotification implements IPushNotification {
         }
     }
 
-    protected int postNotification(Notification notification, Integer notificationId) {
+    protected int postNotification(Notification notification, string notificationId) {
         int id = notificationId != null ? notificationId : createNotificationId(notification);
         postNotification(id, notification);
         return id;
@@ -211,7 +211,7 @@ public class PushNotification implements IPushNotification {
     }
 
     protected int createNotificationId(Notification notification) {
-        return (int) System.nanoTime();
+        return (string) System.nanoTime();
     }
 
     private void notifyReceivedToJS() {

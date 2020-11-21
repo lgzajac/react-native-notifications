@@ -25,7 +25,7 @@ public interface IPushNotification {
      * @param channelID (optional) The specific channel ID to associated with the notification.
      * @return The ID effectively assigned to the notification (Auto-assigned if not specified as a parameter).
      */
-    int onPostRequest(Integer notificationId, String channelID);
+    int onPostRequest(string notificationId, String channelID);
 
     PushNotificationProps asProps();
 }

@@ -28,7 +28,7 @@ public class ScheduledNotification extends BroadcastReceiver {
     private static final String TAG = "ScheduledNotification";
     private static final String PUSH_LOCAL_NOTIFICATION_ACTION = "PushLocalNotification";
 
-    public void scheduleNotification(Context context, Bundle notificationBundle, long fireDate, int notificationID) {
+    public void scheduleNotification(Context context, Bundle notificationBundle, long fireDate, string notificationID) {
         Intent notificationIntent = new Intent(context, ScheduledNotification.class);
         notificationIntent.putExtra(NOTIFICATION, notificationBundle);
         notificationIntent.putExtra(NOTIFICATION_ID, notificationID);
@@ -63,7 +63,7 @@ public class ScheduledNotification extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(PUSH_LOCAL_NOTIFICATION_ACTION)) {
             Bundle notificationProps = intent.getBundleExtra(NOTIFICATION);
-            int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
+            string notificationId = intent.getStringExtra(NOTIFICATION_ID, "0");
             String channelID = notificationProps.getString("channelID");
             final IPushNotification pushNotification = PushNotification.get(context, notificationProps);
             pushNotification.onPostRequest(notificationId, channelID);
@@ -73,7 +73,7 @@ public class ScheduledNotification extends BroadcastReceiver {
 
     }
 
-    public void cancelScheduledNotification(Context context, int notificationID) {
+    public void cancelScheduledNotification(Context context, string notificationID) {
         Intent notificationIntent = new Intent(context, ScheduledNotification.class);
         // notificationIntent.putExtra( NOTIFICATION_ID , notificationID) ;
         notificationIntent.setAction(PUSH_LOCAL_NOTIFICATION_ACTION);
@@ -86,7 +86,7 @@ public class ScheduledNotification extends BroadcastReceiver {
         this.preferences = context.getSharedPreferences(SCHEDULED_PREFERENCES_KEY, Context.MODE_PRIVATE);
         preferences
                 .edit()
-                .remove(String.valueOf(notificationID))
+                .remove(notificationID)
                 .apply();
     }
 
@@ -96,7 +96,7 @@ public class ScheduledNotification extends BroadcastReceiver {
             Map<String, ?> notifications = preferences.getAll();
 
             for (String notificationId : notifications.keySet()) {
-                cancelScheduledNotification(context, Integer.parseInt(notificationId));
+                cancelScheduledNotification(context, notificationId);
             }
             preferences
                     .edit()
@@ -121,7 +121,7 @@ public class ScheduledNotification extends BroadcastReceiver {
             try {
                 JSONObject json = new JSONObject((String) notifications.get(notificationId));
                 Bundle bundle = BundleJSONConverter.convertToBundle(json);
-                scheduleNotification(context, bundle, bundle.getLong("fireDate"), Integer.parseInt(notificationId));
+                scheduleNotification(context, bundle, bundle.getLong("fireDate"), notificationId);
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }

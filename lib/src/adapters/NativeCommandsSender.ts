@@ -7,7 +7,7 @@ import { NotificationChannel } from '../interfaces/NotificationChannel';
 
 interface NativeCommandsModule {
   getInitialNotification(): Promise<Object>;
-  postLocalNotification(notification: Notification, id: number): void;
+  postLocalNotification(notification: Notification, id: string): void;
   requestPermissions(): void;
   abandonPermissions(): void;
   refreshToken(): void;
@@ -34,14 +34,14 @@ export class NativeCommandsSender {
     this.nativeCommandsModule = NativeModules.RNBridgeModule;
   }
 
-  postLocalNotification(notification: Notification, id: number) {
+  postLocalNotification(notification: Notification, id: string) {
     return this.nativeCommandsModule.postLocalNotification(notification, id);
   }
 
   getInitialNotification(): Promise<Object> {
     return this.nativeCommandsModule.getInitialNotification();
   }
-  
+
   requestPermissions() {
     return this.nativeCommandsModule.requestPermissions();
   }

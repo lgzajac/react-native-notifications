@@ -20,7 +20,7 @@
 
 - (void)setCategories:(NSArray *)json {
     NSMutableSet<UNNotificationCategory *>* categories = nil;
-    
+
     if ([json count] > 0) {
         categories = [NSMutableSet new];
         for (NSDictionary* categoryJson in json) {
@@ -30,12 +30,12 @@
     [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:categories];
 }
 
-- (void)postLocalNotification:(NSDictionary *)notification withId:(NSNumber *)notificationId {
+- (void)postLocalNotification:(NSDictionary *)notification withId:(NSString *)notificationId {
     UNNotificationRequest* localNotification = [RCTConvert UNNotificationRequest:notification withId:notificationId];
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:localNotification withCompletionHandler:nil];
 }
 
-- (void)cancelLocalNotification:(NSNumber *)notificationId {
+- (void)cancelLocalNotification:(NSString *)notificationId {
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center removePendingNotificationRequestsWithIdentifiers:@[[notificationId stringValue]]];
 }
@@ -54,7 +54,7 @@
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center getDeliveredNotificationsWithCompletionHandler:^(NSArray<UNNotification *> * _Nonnull notifications) {
         NSMutableArray<NSDictionary *> *formattedNotifications = [NSMutableArray new];
-        
+
         for (UNNotification *notification in notifications) {
             [formattedNotifications addObject:[RCTConvert UNNotificationPayload:notification]];
         }

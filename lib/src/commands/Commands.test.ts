@@ -115,14 +115,14 @@ describe('Commands', () => {
 
     it('use passed notification id', () => {
       const notification: Notification = new Notification({identifier: 'id'});
-      const passedId: number = 2;
+      const passedId: string = '2';
       uut.postLocalNotification(notification, passedId);
       verify(mockedNativeCommandsSender.postLocalNotification(notification, passedId)).called();
     });
 
     it('return notification id', () => {
       const notification: Notification = new Notification({identifier: 'id'});
-      const notificationId: number = 2;
+      const notificationId: string = '2';
       const response = uut.postLocalNotification(notification, notificationId);
       expect(response).toEqual(notificationId);
     });
