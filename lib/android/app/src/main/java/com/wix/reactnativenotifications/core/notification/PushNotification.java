@@ -61,7 +61,7 @@ public class PushNotification implements IPushNotification {
     @Override
     public void onReceived() throws InvalidNotificationException {
         if (!mAppLifecycleFacade.isAppVisible()) {
-            postNotification((Notification) null,null);
+            postNotification((Notification) null, null);
             notifyReceivedBackgroundToJS();
         } else {
             notifyReceivedToJS();
@@ -160,7 +160,7 @@ public class PushNotification implements IPushNotification {
         setUpIcon(notification);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (channelID==null) {
+            if (channelID == null) {
                 NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                         CHANNEL_NAME,
                         NotificationManager.IMPORTANCE_DEFAULT);
@@ -170,7 +170,7 @@ public class PushNotification implements IPushNotification {
             } else {
                 notification.setChannelId(channelID);
             }
-          }
+        }
 
         return notification;
     }

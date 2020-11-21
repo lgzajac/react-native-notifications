@@ -105,7 +105,7 @@ public class RNNotificationsModule extends ReactContextBaseJavaModule implements
         String  channelID = notificationProps.getString("channelID");
         if (fireDate != 0) {
             ScheduledNotification scheduledNotification = new ScheduledNotification();
-            scheduledNotification.scheduleNotification(getReactApplicationContext().getApplicationContext(), notificationProps, firedate, notificationId);
+            scheduledNotification.scheduleNotification(getReactApplicationContext().getApplicationContext(), notificationProps, fireDate, notificationId);
         } else {
             final IPushNotification pushNotification = PushNotification.get(getReactApplicationContext().getApplicationContext(), notificationProps);
             pushNotification.onPostRequest(notificationId, channelID);

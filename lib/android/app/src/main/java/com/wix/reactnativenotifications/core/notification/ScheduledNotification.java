@@ -20,31 +20,28 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
-
 public class ScheduledNotification extends BroadcastReceiver {
-    public static String NOTIFICATION = "notification" ;
-    public static String NOTIFICATION_ID = "notification-id" ;
+    public static String NOTIFICATION = "notification";
+    public static String NOTIFICATION_ID = "notification-id";
     private static final String SCHEDULED_PREFERENCES_KEY = "RNFNotifications";
     private SharedPreferences preferences;
     private static final String TAG = "ScheduledNotification";
-    private static  final String PUSH_LOCAL_NOTIFICATION_ACTION="PushLocalNotification";
+    private static final String PUSH_LOCAL_NOTIFICATION_ACTION = "PushLocalNotification";
 
-
-
-    public void scheduleNotification (Context context, Bundle notificationBundle, long fireDate, int notificationID) {
-        Intent notificationIntent = new Intent( context, ScheduledNotification.class ) ;
-        notificationIntent.putExtra( NOTIFICATION , notificationBundle) ;
-        notificationIntent.putExtra( NOTIFICATION_ID , notificationID) ;
+    public void scheduleNotification(Context context, Bundle notificationBundle, long fireDate, int notificationID) {
+        Intent notificationIntent = new Intent(context, ScheduledNotification.class);
+        notificationIntent.putExtra(NOTIFICATION, notificationBundle);
+        notificationIntent.putExtra(NOTIFICATION_ID, notificationID);
         notificationIntent.setAction(PUSH_LOCAL_NOTIFICATION_ACTION);
 
-        PendingIntent pendingIntent = PendingIntent. getBroadcast ( context, notificationID, notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP , fireDate , pendingIntent);
-        }else{
-            alarmManager.set(AlarmManager.RTC_WAKEUP , fireDate , pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, fireDate, pendingIntent);
         }
 
 
@@ -64,26 +61,26 @@ public class ScheduledNotification extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(intent.getAction().equals(PUSH_LOCAL_NOTIFICATION_ACTION)){
+        if (intent.getAction().equals(PUSH_LOCAL_NOTIFICATION_ACTION)) {
             Bundle notificationProps = intent.getBundleExtra(NOTIFICATION);
-            int notificationId = intent.getIntExtra( NOTIFICATION_ID , 0 ) ;
-            String channelID=notificationProps.getString("channelID");
-           final IPushNotification pushNotification = PushNotification.get(context, notificationProps);
-            pushNotification.onPostRequest(notificationId,channelID);
-        }else if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
+            int notificationId = intent.getIntExtra(NOTIFICATION_ID, 0);
+            String channelID = notificationProps.getString("channelID");
+            final IPushNotification pushNotification = PushNotification.get(context, notificationProps);
+            pushNotification.onPostRequest(notificationId, channelID);
+        } else if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             reScheduleAllNotifications(context);
         }
 
     }
 
-    public void cancelScheduledNotification(Context context,int notificationID){
-        Intent notificationIntent = new Intent( context, ScheduledNotification.class ) ;
-       // notificationIntent.putExtra( NOTIFICATION_ID , notificationID) ;
+    public void cancelScheduledNotification(Context context, int notificationID) {
+        Intent notificationIntent = new Intent(context, ScheduledNotification.class);
+        // notificationIntent.putExtra( NOTIFICATION_ID , notificationID) ;
         notificationIntent.setAction(PUSH_LOCAL_NOTIFICATION_ACTION);
 
-        PendingIntent pendingIntent = PendingIntent. getBroadcast ( context, notificationID, notificationIntent , PendingIntent. FLAG_UPDATE_CURRENT ) ;
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        AlarmManager alarmManager =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         assert alarmManager != null;
         alarmManager.cancel(pendingIntent);
         this.preferences = context.getSharedPreferences(SCHEDULED_PREFERENCES_KEY, Context.MODE_PRIVATE);
@@ -93,13 +90,13 @@ public class ScheduledNotification extends BroadcastReceiver {
                 .apply();
     }
 
-    public void cancelAllScheduledNotifications( Context context) {
+    public void cancelAllScheduledNotifications(Context context) {
         try {
             this.preferences = context.getSharedPreferences(SCHEDULED_PREFERENCES_KEY, Context.MODE_PRIVATE);
             Map<String, ?> notifications = preferences.getAll();
 
             for (String notificationId : notifications.keySet()) {
-                cancelScheduledNotification(context,Integer.parseInt(notificationId));
+                cancelScheduledNotification(context, Integer.parseInt(notificationId));
             }
             preferences
                     .edit()
@@ -113,18 +110,18 @@ public class ScheduledNotification extends BroadcastReceiver {
         }
     }
 
-   void reScheduleAllNotifications(Context context) {
+    void reScheduleAllNotifications(Context context) {
         ArrayList<Bundle> array = new ArrayList<>();
 
-       this.preferences = context.getSharedPreferences(SCHEDULED_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        this.preferences = context.getSharedPreferences(SCHEDULED_PREFERENCES_KEY, Context.MODE_PRIVATE);
 
-       Map<String, ?> notifications = preferences.getAll();
+        Map<String, ?> notifications = preferences.getAll();
 
         for (String notificationId : notifications.keySet()) {
             try {
                 JSONObject json = new JSONObject((String) notifications.get(notificationId));
                 Bundle bundle = BundleJSONConverter.convertToBundle(json);
-                scheduleNotification(context,bundle, bundle.getLong("fireDate"),Integer.parseInt(notificationId));
+                scheduleNotification(context, bundle, bundle.getLong("fireDate"), Integer.parseInt(notificationId));
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
             }
